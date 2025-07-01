@@ -107,8 +107,9 @@ def train():
     record = 0
     agent = Agent()
     game = SnakeGameAI(headless=False)
-    while True:
-        # get old state
+    try:
+        while True:
+            # get old state
         state_old = agent.get_state(game)
 
         # get move
@@ -132,7 +133,7 @@ def train():
 
             if score > record:
                 record = score
-                agent.model.save()
+                # agent.model.save() # Model saving moved to finally block
 
             print('Game', agent.n_games, 'Score', score, 'Record:', record)
 
@@ -141,6 +142,11 @@ def train():
             mean_score = total_score / agent.n_games
             plot_mean_scores.append(mean_score)
             plot(plot_scores, plot_mean_scores)
+    finally:
+        # Save the model when the training loop exits or is interrupted
+        print("Training interrupted. Saving model...")
+        agent.model.save()
+        print("Model saved.")
 
 
 if __name__ == '__main__':
