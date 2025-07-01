@@ -29,14 +29,12 @@ SPEED = 40
 
 class SnakeGameAI:
 
-    def __init__(self, w=640, h=480, headless=False):
+    def __init__(self, w=640, h=480):
         self.w = w
         self.h = h
-        self.headless = headless
         # init display
-        if not self.headless:
-            self.display = pygame.display.set_mode((self.w, self.h))
-            pygame.display.set_caption('Snake')
+        self.display = pygame.display.set_mode((self.w, self.h))
+        pygame.display.set_caption('Snake')
         self.clock = pygame.time.Clock()
         self.reset()
 
@@ -67,10 +65,12 @@ class SnakeGameAI:
     def play_step(self, action):
         self.frame_iteration += 1
         # 1. collect user input
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+        # Check if display is initialized before processing events
+        if pygame.display.get_init():
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
         
         # 2. move
         self._move(action) # update the head
@@ -113,18 +113,17 @@ class SnakeGameAI:
 
 
     def _update_ui(self):
-        if not self.headless:
-            self.display.fill(BLACK)
+        self.display.fill(BLACK)
 
-            for pt in self.snake:
-                pygame.draw.rect(self.display, BLUE1, pygame.Rect(pt.x, pt.y, BLOCK_SIZE, BLOCK_SIZE))
-                pygame.draw.rect(self.display, BLUE2, pygame.Rect(pt.x+4, pt.y+4, 12, 12))
+        for pt in self.snake:
+            pygame.draw.rect(self.display, BLUE1, pygame.Rect(pt.x, pt.y, BLOCK_SIZE, BLOCK_SIZE))
+            pygame.draw.rect(self.display, BLUE2, pygame.Rect(pt.x+4, pt.y+4, 12, 12))
 
-            pygame.draw.rect(self.display, RED, pygame.Rect(self.food.x, self.food.y, BLOCK_SIZE, BLOCK_SIZE))
+        pygame.draw.rect(self.display, RED, pygame.Rect(self.food.x, self.food.y, BLOCK_SIZE, BLOCK_SIZE))
 
-            text = font.render("Score: " + str(self.score), True, WHITE)
-            self.display.blit(text, [0, 0])
-            pygame.display.flip()
+        text = font.render("Score: " + str(self.score), True, WHITE)
+        self.display.blit(text, [0, 0])
+        pygame.display.flip()
 
 
     def _move(self, action):
