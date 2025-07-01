@@ -17,7 +17,7 @@ class Agent:
 
     def __init__(self):
         self.n_games = 0
-        self.epsilon = 0 # randomness
+        self.epsilon = 80 # randomness
         self.gamma = 0.9 # discount rate
         self.memory = deque(maxlen=MAX_MEMORY) # popleft()
         self.model = Linear_QNet(11, 256, 3)
@@ -27,9 +27,10 @@ class Agent:
         model_path = './model/model.pth'
         if os.path.exists(model_path):
             self.model.load_state_dict(torch.load(model_path))
-            self.model.eval() # Set model to evaluation mode
+
             print(f"Model loaded from {model_path}")
-            self.epsilon = 0 # No randomness when loading a trained model
+            self.model.train() # Set model to training mode to allow exploration
+
 
 
     def get_state(self, game):
@@ -97,9 +98,13 @@ class Agent:
 
     def get_action(self, state):
         # random moves: tradeoff exploration / exploitation
-        # If a model is loaded, epsilon is already 0, so no randomness.
-        if self.epsilon != 0:
-            self.epsilon = 80 - self.n_games
+        # random moves: tradeoff exploration / exploitation
+        # If the model is in training mode, apply exploration.
+        # If the model is in evaluation mode (pre-trained model loaded), no randomness.
+        if self.model.training: # This means no pre-trained model was loaded for evaluation
+            self.epsilon = 80 - self.n_games # This will decrease epsilon over games
+            if self.epsilon < 0: # Ensure epsilon doesn't go negative
+                self.epsilon = 0
 
         final_move = [0,0,0]
         if random.randint(0, 200) < self.epsilon:
