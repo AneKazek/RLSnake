@@ -34,6 +34,7 @@ class SnakeGameAI:
         self.h = h
         # init display
         self.display = pygame.display.set_mode((self.w, self.h))
+        print("Pygame display initialized.")
         pygame.display.set_caption('Snake')
         self.clock = pygame.time.Clock()
         self.reset()
@@ -63,14 +64,18 @@ class SnakeGameAI:
 
 
     def play_step(self, action):
+        
         self.frame_iteration += 1
         # 1. collect user input
         # Check if display is initialized before processing events
         if pygame.display.get_init():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    print("Pygame window closed. Exiting...")
                     pygame.quit()
                     quit()
+
+
         
         # 2. move
         self._move(action) # update the head
@@ -93,9 +98,12 @@ class SnakeGameAI:
             self.snake.pop()
         
         # 5. update ui and clock
+        
         self._update_ui()
+        
         self.clock.tick(SPEED)
         # 6. return game over and score
+        
         return reward, game_over, self.score
 
 
