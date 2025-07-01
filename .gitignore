@@ -4,7 +4,7 @@ __pycache__/
 
 # C extensions
 *.so
-
+references/snake-ai-pytorch/
 # Distribution / packaging
 .Python
 env/

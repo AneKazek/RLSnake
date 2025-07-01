@@ -1,11 +1,12 @@
 import pygame
+import os
 import random
 from enum import Enum
 from collections import namedtuple
 import numpy as np
 
 pygame.init()
-font = pygame.font.Font('arial.ttf', 25)
+font = pygame.font.Font(os.path.join(os.path.dirname(__file__), 'arial.ttf'), 25)
 #font = pygame.font.SysFont('arial', 25)
 
 class Direction(Enum):
@@ -28,12 +29,14 @@ SPEED = 40
 
 class SnakeGameAI:
 
-    def __init__(self, w=640, h=480):
+    def __init__(self, w=640, h=480, headless=False):
         self.w = w
         self.h = h
+        self.headless = headless
         # init display
-        self.display = pygame.display.set_mode((self.w, self.h))
-        pygame.display.set_caption('Snake')
+        if not self.headless:
+            self.display = pygame.display.set_mode((self.w, self.h))
+            pygame.display.set_caption('Snake')
         self.clock = pygame.time.Clock()
         self.reset()
 
@@ -110,17 +113,18 @@ class SnakeGameAI:
 
 
     def _update_ui(self):
-        self.display.fill(BLACK)
+        if not self.headless:
+            self.display.fill(BLACK)
 
-        for pt in self.snake:
-            pygame.draw.rect(self.display, BLUE1, pygame.Rect(pt.x, pt.y, BLOCK_SIZE, BLOCK_SIZE))
-            pygame.draw.rect(self.display, BLUE2, pygame.Rect(pt.x+4, pt.y+4, 12, 12))
+            for pt in self.snake:
+                pygame.draw.rect(self.display, BLUE1, pygame.Rect(pt.x, pt.y, BLOCK_SIZE, BLOCK_SIZE))
+                pygame.draw.rect(self.display, BLUE2, pygame.Rect(pt.x+4, pt.y+4, 12, 12))
 
-        pygame.draw.rect(self.display, RED, pygame.Rect(self.food.x, self.food.y, BLOCK_SIZE, BLOCK_SIZE))
+            pygame.draw.rect(self.display, RED, pygame.Rect(self.food.x, self.food.y, BLOCK_SIZE, BLOCK_SIZE))
 
-        text = font.render("Score: " + str(self.score), True, WHITE)
-        self.display.blit(text, [0, 0])
-        pygame.display.flip()
+            text = font.render("Score: " + str(self.score), True, WHITE)
+            self.display.blit(text, [0, 0])
+            pygame.display.flip()
 
 
     def _move(self, action):
