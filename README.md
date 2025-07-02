@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-orange.svg)](https://pytorch.org/)
-[![Made with Love](https://img.shields.io/badge/Made%20with-Love-ff69b4.svg)](https://github.com/your-username/RLSnake)
+[![Made with Love](https://img.shields.io/badge/Made%20with-Love-ff69b4.svg)](https://github.com/AneKazek/RLSnake)
 
 This repository contains an advanced implementation of a Snake game AI agent trained using Reinforcement Learning with PyTorch. The project showcases how to develop an intelligent agent that learns to master the classic Snake game by optimizing its strategy to achieve high scores.
 
